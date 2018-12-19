@@ -1,0 +1,15 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:Left">
+  {{ action }}
+  <h3>
+   &nbsp;&nbsp;{{ title }}!
+  </h3>
+</div>
+<div style="margin-left:10px">
+    <a routerLinkActive="active" routerLink="/project" (click)="CallProject()">Add Project</a>
+    <a routerLinkActive="active" routerLink="/addtask" (click)="CallAddTask()" style="margin-left:10px">Add Task</a>
+    <a routerLinkActive="active" routerLink="/user" (click)="CallUser()" style="margin-left:10px">Add User</a>
+    <a routerLinkActive="active" routerLink="/viewtask" (click)="CallViewTask()" style="margin-left:10px">View Task</a>
+  </div>
+  <router-outlet></router-outlet>
+

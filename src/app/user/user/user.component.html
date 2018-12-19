@@ -1,0 +1,82 @@
+<div class="container">
+    <div class="row" style="padding:5px">
+      <div class="form-group">
+        <span class="col-md-4">First Name :</span>
+        <div class="col-md-4">
+          <input type="text" class="form-control"  #firstname="ngModel" [(ngModel)] = "UserItem.First_Name" required/>
+        </div>
+        <div class="col-md-4" *ngIf="firstname.invalid">
+            <span style="color:red">First Name is required.</span>
+          </div>
+      </div>
+    </div>
+    <div class="row" style="padding:5px">
+        <div class="form-group">
+            <span class="col-md-4">Last Name :</span>
+            <div class="col-md-4">
+              <input type="text" class="form-control"  #lastname="ngModel" [(ngModel)] = "UserItem.Last_Name" required/>
+            </div>
+            <div class="col-md-4" *ngIf="lastname.invalid">
+                <span style="color:red">Last Name is required.</span>
+              </div>
+          </div>
+    </div>
+    <div class="row" style="padding:5px">
+        <div class="form-group">
+            <span class="col-md-4">Employee Id :</span>
+            <div class="col-md-4">
+              <input type="text" class="form-control"  #employeeid="ngModel" [(ngModel)] = "UserItem.Employee_Id" required/>
+            </div>
+            <div class="col-md-4" *ngIf="employeeid.invalid">
+                <span style="color:red">Employee Id is required.</span>
+              </div>
+          </div>
+    </div>
+    <div class="row" style="padding:5px">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-4">
+              <input type="button" [disabled]="firstname.invalid || lastname.invalid || employeeid.invalid" class="btn btn-default" value="{{AddOrUpdate}}" style="margin-right:10px" (click)="AddOrUpdateUser()">
+              <input type="button" class="btn btn-default" value="Reset" style="margin-left:10px" (click)="Reset()">
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row" style="padding:5px">
+        <div class="form-group">
+          <div class="col-md-4">
+            <input type="text" class="form-control" [(ngModel)] = "firstnameSearch" placeholder="Enter First Name to search..">
+        </div>
+        <div class="col-md-8">
+          <span class="col-md-1">Sort:</span>
+          <input type="button" class="btn btn-default col-md-2" value="First Name" (click)="SortByFirstName()">
+          <input type="button" class="btn btn-default col-md-2" value="Last Name" (click)="SortByLastName()" >
+          <input type="button" class="btn btn-default col-md-2" value="Id" (click)="SortById()">
+      </div>
+      </div>
+      </div>
+      <div class="row" style="padding:5px">
+      <ul>
+          <div class="list-group">
+            <li class="list-group-item" *ngFor="let user of Users| userSearch : firstnameSearch">
+              
+                <div class="input-group col-md-12">
+                  <span style="background-color:lightgray" class="col-md-4">{{user.First_Name}}</span>
+                  <div class="input-group col-md-8">
+                  <input type="button" class="btn btn-default" value="Edit" style="margin-left:10px" (click)="UpdateUser(user.UserId)">
+                  </div>
+                </div>
+                  <div class="input-group col-md-12">
+                    <span class="col-md-4" style="background-color:lightgray">{{user.Last_Name}}</span>
+                    <div class="input-group col-md-8">
+                    <input type="button" class="btn btn-default" value="Delete" style="margin-left:10px" (click)="DeleteUser(user.UserId)">
+                  </div>
+                  </div>
+                  <div class="input-group col-md-12">
+                  <span class="col-md-4" style="background-color:lightgray">{{user.Employee_Id}}</span>
+                  </div>
+                              
+              </li>
+          </div>
+        </ul>
+      </div>
+      </div>

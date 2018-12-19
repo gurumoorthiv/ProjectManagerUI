@@ -1,0 +1,207 @@
+<div class="container">
+  <div class="row" style="padding:5px">
+    <div class="form-group">
+      <span class="col-md-1">Project:</span>
+      <div class="col-md-3">
+        <select class="form-control col-md-3"  readonly="true" [(ngModel)]="TaskItem.ProjectId">
+          <option [ngValue]="project.ProjectId" *ngFor="let project of Projects" >
+            {{project.Project_Name}}
+          </option>
+        </select>
+      </div>
+      <input type="button" class="btn btn-default col-md-1" value="Search" style="margin-right:5px" data-toggle="modal" data-target="#projectModal">
+    </div>
+  </div>
+
+  <div class="row" style="padding:5px">
+    <div class="form-group">
+      <span class="col-md-1">Task :</span>
+      <div class="col-md-3">
+        <input type="text" class="form-control"  #taskname="ngModel" [(ngModel)] = "TaskItem.TaskName" required/>
+      </div>
+      <div class="col-md-3" *ngIf="taskname.invalid">
+          <span style="color:red">Task Name is required.</span>
+        </div>
+    </div>
+  </div>
+
+  <div class="row" style="padding:5px">
+    <div class="form-group">
+      <div class="col-md-offset-1 col-md-1">
+      <input type="checkbox" id="cb" class="form-control" [(ngModel)] = "TaskItem.IsParent" (change)="OnSelect($event)"/>
+      </div>
+      <span class="col-md-2">Parent Task</span>
+      <div class="form-group">
+      
+      </div>
+    </div>
+</div>
+
+<div class="row" style="padding:5px">
+  <div class="form-group">
+    <span class="col-md-1">Priority :</span>
+    <div class="col-md-3">
+      <input type="range" class="form-control" disabled="{{isDisabled}}" [(ngModel)] = "TaskItem.Priority" Min="0" Max="30" value="0" />
+    </div>
+  </div>
+</div>
+
+<div class="row" style="padding:5px">
+  <div class="form-group">
+    <span class="col-md-1">Parent task:</span>
+    <div class="col-md-3">
+      <select class="form-control col-md-3" readonly="true" [(ngModel)]="TaskItem.ParentId">
+        <option [ngValue]="task.TaskId" *ngFor="let task of ParentTasks" >
+          {{task.TaskName}}
+        </option>
+      </select>
+      
+    </div>
+    <input type="button"  class="btn btn-default col-md-1" value="Search" style="margin-right:10px" data-toggle="modal" data-target="#parentTaskModal">
+  
+  </div>
+</div>
+
+<div class="row" style="padding:5px">
+  <div class="form-group">
+    <span class="col-md-1">Start Date</span>
+      <div class="col-md-2">
+        <input type="date" class="form-control" [(ngModel)] = "TaskItem.StartDate" disabled = "{{isDisabled}}" (change)="ValidateStartEndDate()" />
+      </div>
+      <span class="col-md-1">End Date</span>
+      <div class="col-md-2">
+            <input type="date" class="form-control" [(ngModel)] = "TaskItem.EndDate" disabled = "{{isDisabled}}" (change)="ValidateStartEndDate()"/>
+      </div>
+      <div class="col-md-2" [(ngModel)]="isValidEndDate" *ngIf="isValidEndDate == 'Invalid'">
+        <span style="color:red">Start date must be less than End date.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="padding:5px">
+    <div class="form-group">
+      <span class="col-md-1">User:</span>
+      <div class="col-md-3">
+        <select class="form-control col-md-3" #user="ngModel" readonly="true" [(ngModel)]="TaskItem.UserId">
+          <option [ngValue]="user.UserId" *ngFor="let user of Users" >
+            {{user.First_Name}}
+          </option>
+        </select>
+        
+      </div>
+      <input type="button" class="btn btn-default col-md-1" value="Search" style="margin-right:10px" data-toggle="modal" data-target="#userModal">
+    
+    </div>
+</div>
+
+  <div class="row" style="padding:5px">
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-4">
+          <input type="button" [disabled]="taskname.invalid || ValidateDate()" class="btn btn-default" value="Add" style="margin-right:10px" (click)="AddTask()">
+          <input type="button" class="btn btn-default" value="Reset" style="margin-left:10px" (click)="Reset()">
+      </div>
+    </div>
+  </div>
+
+  <!--Modal-->
+  <div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1>Select a  Project</h1>
+        </div>
+        <div class="modal-body">
+            <div class="row" style="padding:5px">
+                <div class="form-group">
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" [(ngModel)] = "projectnameSearch" placeholder="Enter Project to search..">
+                  </div>
+                  <table class="table" >
+                    <thead>
+                      <td>Project Name</td>
+                      <td>Start Date</td>
+                      <td>End Date</td>
+                      <td></td>
+                    </thead>
+                    <tbody *ngFor="let project of Projects| projectSearch : projectnameSearch">
+                      <tr *ngIf="project">
+                        <td>{{ project.Project_Name }}</td>
+                        <td>{{ project.Start_Date }}</td>
+                        <td>{{ project.End_Date }}</td>
+                        <td><input type="button" class="btn btn-default" value="Select" data-dismiss="modal" (click)="SelectProject(project.ProjectId)" ></td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="parentTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1>Select a  Parent Task</h1>
+        </div>
+        <div class="modal-body">
+            <div class="row" style="padding:5px">
+                <div class="form-group">
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" [(ngModel)] = "tasknameSearch" placeholder="Enter Task Name to search..">
+                  </div>
+                  <table class="table" >
+                    <thead>
+                      <td>Task Name</td>
+                      <td></td>
+                    </thead>
+                    <tbody *ngFor="let task of ParentTasks| taskSearch : tasknameSearch">
+                      <tr *ngIf="task">
+                        <td>{{ task.TaskName }}</td>
+                         <td><input type="button" class="btn btn-default" value="Select" data-dismiss="modal" (click)="SelectParentTask(task.TaskId)" ></td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1>Select a  user</h1>
+        </div>
+        <div class="modal-body">
+            <div class="row" style="padding:5px">
+                <div class="form-group">
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" [(ngModel)] = "firstnameSearch" placeholder="Enter First Name to search..">
+                </div>
+            <table class="table" >
+                <thead>
+                  <td>First Name</td>
+                  <td>Last Name</td>
+                  <td>Employee Id</td>
+                  <td></td>
+                </thead>
+                <tbody *ngFor="let user of Users| userSearch : firstnameSearch">
+                  <tr *ngIf="user">
+                    <td>{{ user.First_Name }}</td>
+                    <td>{{ user.Last_Name }}</td>
+                    <td>{{ user.Employee_Id }}</td>
+                    <td><input type="button" class="btn btn-default" value="Select" data-dismiss="modal" (click)="SelectUser(user.UserId)" ></td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+</div>
